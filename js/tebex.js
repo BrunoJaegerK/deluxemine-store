@@ -24,13 +24,12 @@ async function tebexRequest(url, options = {}) {
     }
 
     if (!response.ok) {
-        const message =
+        throw new Error(
+            result?.detail ||
             result?.error ||
             result?.message ||
-            result?.detail ||
-            `Error HTTP ${response.status}`;
-
-        throw new Error(message);
+            `Error HTTP ${response.status}`
+        );
     }
 
     return result;
@@ -86,9 +85,62 @@ export async function createBasket() {
 }
 
 /**
- * Añade un paquete a una cesta existente.
+ * Obtiene los enlaces de autenticación de la cesta.
  */
-export async function addPackageToBasket(basketIdent, packageId, quantity = 1) {
+export async function getBasketAuthUrl(basketIdent) {
+    if (!basketIdent) {
+        throw new Error("No se recibió el identificador de la cesta.");
+    }
+
+    const returnUrl = new URL(
+        window.location.origin + window.location.pathname
+    );
+
+    returnUrl.searchParams.set("checkout", "authenticated");
+    returnUrl.searchParams.set("basket", basketIdent);
+
+    const endpoint =
+        `${TEBEX_API}/baskets/${encodeURIComponent(basketIdent)}/auth` +
+        `?returnUrl=${encodeURIComponent(returnUrl.href)}`;
+
+    const result = await tebexRequest(endpoint);
+
+    const data = getData(result);
+    const authOptions = Array.isArray(data) ? data : [];
+
+    if (!authOptions.length) {
+        throw new Error(
+            "Tebex no proporcionó ningún método para autenticar al jugador."
+        );
+    }
+
+    // Si hay varias opciones, priorizamos la que identifique Minecraft.
+    const selectedOption =
+        authOptions.find(option =>
+            /minecraft/i.test(option.name || "")
+        ) || authOptions[0];
+
+    if (!selectedOption?.url) {
+        throw new Error("Tebex devolvió un enlace de autenticación inválido.");
+    }
+
+    const authUrl = new URL(selectedOption.url);
+
+    if (authUrl.protocol !== "https:") {
+        throw new Error("El enlace de autenticación no es seguro.");
+    }
+
+    return authUrl.href;
+}
+
+/**
+ * Añade un paquete a una cesta ya autenticada.
+ */
+export async function addPackageToBasket(
+    basketIdent,
+    packageId,
+    quantity = 1
+) {
     if (!basketIdent || !packageId) {
         throw new Error("Falta el identificador de la cesta o del producto.");
     }
@@ -108,36 +160,50 @@ export async function addPackageToBasket(basketIdent, packageId, quantity = 1) {
 }
 
 /**
- * Crea la cesta, añade todos los productos
- * y devuelve el enlace seguro de checkout.
+ * Crea la cesta y obtiene el enlace de autenticación.
+ * Todavía no añade paquetes.
  */
-export async function createCheckout(cartItems) {
+export async function createCheckout() {
+    const basket = await createBasket();
+    const authUrl = await getBasketAuthUrl(basket.ident);
+
+    return {
+        basketIdent: basket.ident,
+        authUrl
+    };
+}
+
+/**
+ * Continúa el checkout después de que Tebex
+ * haya autenticado al jugador.
+ */
+export async function completeCheckout(basketIdent, cartItems) {
+    if (!basketIdent) {
+        throw new Error("No se encontró la cesta de Tebex.");
+    }
+
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
         throw new Error("Tu carrito está vacío.");
     }
 
-    const basket = await createBasket();
-
     for (const item of cartItems) {
         await addPackageToBasket(
-            basket.ident,
+            basketIdent,
             item.id,
             item.quantity
         );
     }
 
-    // Obtener el enlace de checkout de la última respuesta
-    // disponible mediante la consulta de la cesta.
     const result = await tebexRequest(
-        `${TEBEX_API}/baskets/${encodeURIComponent(basket.ident)}`
+        `${TEBEX_API}/baskets/${encodeURIComponent(basketIdent)}`
     );
 
-    const updatedBasket = getData(result);
-    const checkoutUrl = updatedBasket?.links?.checkout;
+    const basket = getData(result);
+    const checkoutUrl = basket?.links?.checkout;
 
     if (!checkoutUrl) {
         throw new Error(
-            "La cesta se creó, pero Tebex no devolvió el enlace de checkout."
+            "La cesta se actualizó, pero Tebex no devolvió el enlace de pago."
         );
     }
 
@@ -152,3 +218,5 @@ export async function createCheckout(cartItems) {
 
     return parsedUrl.href;
 }
+
+
