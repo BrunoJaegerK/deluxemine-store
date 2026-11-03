@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090711">
+
+    <meta name="description" content="Tienda oficial de DeluxeMine Network. Descubre rangos, llaves, monedas y ventajas exclusivas.">
+
+    <title>DeluxeMine Network | Tienda Oficial</title>
+
+    <style>
+        :root {
+            color-scheme: dark;
+
+            --bg: #090711;
+            --panel: #12101d;
+            --panel-2: #191426;
+            --line: rgba(190, 151, 255, .17);
+
+            --text: #f8f5ff;
+            --muted: #aaa2bb;
+
+            --purple: #a66cff;
+            --purple-2: #7c3aed;
+            --pink: #d66cff;
+
+            --max: 1160px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    ellipse at 80% 0%,
+                    rgba(113, 55, 190, .19),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    ellipse at 0% 42%,
+                    rgba(87, 38, 140, .12),
+                    transparent 32%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .container {
+            width: min(var(--max), calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .topbar {
+            border-bottom: 1px solid var(--line);
+            background: rgba(9, 7, 17, .78);
+            backdrop-filter: blur(15px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .topbar-inner {
+            min-height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-weight: 900;
+            letter-spacing: .09em;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(145deg, #bd8aff, #6729c8);
+
+            box-shadow:
+                0 0 28px rgba(166, 108, 255, .35);
+        }
+
+        .brand-mark svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 3px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+            letter-spacing: .28em;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+
+            color: #c9c1d8;
+
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .nav a:hover {
+            color: white;
+        }
+
+        .nav-cta,
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            border: 1px solid rgba(210, 180, 255, .28);
+            border-radius: 10px;
+
+            padding: 12px 17px;
+
+            background:
+                linear-gradient(135deg, #9b5df0, #7135c5);
+
+            color: white;
+
+            font-weight: 800;
+            font-size: 12px;
+
+            box-shadow:
+                0 8px 30px rgba(124, 58, 237, .22);
+
+            transition: transform .2s, filter .2s;
+        }
+
+        .nav-cta:hover,
+        .button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.12);
+        }
+
+        .menu-toggle {
+            display: none;
+
+            border: 1px solid var(--line);
+            background: var(--panel);
+            color: white;
+
+            border-radius: 9px;
+            padding: 9px 12px;
+
+            cursor: pointer;
+        }
+
+        /* HERO */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            padding: 96px 0 82px;
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 470px;
+            height: 470px;
+
+            right: -110px;
+            top: -145px;
+
+            border: 1px solid rgba(184, 137, 255, .13);
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 0 45px rgba(184, 137, 255, .025),
+                0 0 0 90px rgba(184, 137, 255, .02);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+
+            align-items: center;
+            gap: 55px;
+
+            position: relative;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            color: #d2b7ff;
+
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+
+            width: 24px;
+            height: 1px;
+
+            background: var(--purple);
+
+            box-shadow:
+                0 0 10px var(--purple);
+        }
+
+        h1 {
+            margin: 20px 0 18px;
+
+            max-width: 650px;
+
+            font-size: clamp(42px, 6.4vw, 76px);
+            line-height: .99;
+            letter-spacing: -.055em;
+        }
+
+        h1 span {
+            color: #bd91ff;
+
+            text-shadow:
+                0 0 35px rgba(166, 108, 255, .32);
+        }
+
+        .hero-copy {
+            max-width: 530px;
+
+            color: var(--muted);
+
+            font-size: 15px;
+            line-height: 1.85;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            margin-top: 30px;
+        }
+
+        .button.secondary {
+            background: rgba(255, 255, 255, .035);
+            box-shadow: none;
+        }
+
+        .hero-note {
+            margin-top: 22px;
+
+            color: #827991;
+            font-size: 11px;
+        }
+
+        /* HERO DECORATION */
+
+        .showcase {
+            min-height: 350px;
+
+            position: relative;
+
+            display: grid;
+            place-items: center;
+        }
+
+        .orb {
+            position: absolute;
+
+            width: 290px;
+            height: 290px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(164, 104, 255, .24),
+                    rgba(115, 53, 194, .08) 48%,
+                    transparent 70%
+                );
+
+            filter: blur(5px);
+        }
+
+        .crystal-card {
+            position: relative;
+
+            width: min(330px, 100%);
+
+            padding: 27px;
+
+            border: 1px solid rgba(204, 171, 255, .3);
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(44, 30, 66, .92),
+                    rgba(16, 13, 26, .94)
+                );
+
+            box-shadow:
+                0 25px 90px rgba(0, 0, 0, .48),
+                0 0 55px rgba(147, 83, 230, .16);
+
+            transform: rotate(3deg);
+        }
+
+        .crystal-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            color: #c9aaff;
+
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: .18em;
+        }
+
+        .crystal {
+            margin: 26px auto 20px;
+
+            width: 112px;
+            height: 112px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 28px;
+
+            transform: rotate(45deg);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #d8baff,
+                    #8d4de0 55%,
+                    #51228f
+                );
+
+            box-shadow:
+                inset -10px -10px 25px rgba(38, 9, 75, .4),
+                0 0 50px rgba(164, 104, 255, .4);
+        }
+
+        .crystal svg {
+            width: 59px;
+            height: 59px;
+
+            transform: rotate(-45deg);
+
+            filter:
+                drop-shadow(0 5px 10px rgba(40, 10, 70, .4));
+        }
+
+        .crystal-card h2 {
+            margin: 0;
+
+            text-align: center;
+
+            font-size: 24px;
+            letter-spacing: .04em;
+        }
+
+        .crystal-card p {
+            margin-top: 8px;
+
+            text-align: center;
+
+            color: #aaa0bc;
+            font-size: 11px;
+        }
+
+        .float-tag {
+            position: absolute;
+
+            right: -4px;
+            bottom: 34px;
+
+            padding: 12px 15px;
+
+            border: 1px solid var(--line);
+            border-radius: 12px;
+
+            background: #171223;
+
+            color: #e3d5ff;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, .3);
+        }
+
+        /* SECTIONS */
+
+        .section {
+            padding: 64px 0;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+
+            gap: 20px;
+
+            margin-bottom: 27px;
+        }
+
+        .section-kicker {
+            color: #bd91ff;
+
+            font-size: 10px;
+            letter-spacing: .2em;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        h2.section-title {
+            margin-top: 9px;
+
+            font-size: clamp(27px, 4vw, 38px);
+            letter-spacing: -.04em;
+        }
+
+        .section-desc {
+            max-width: 420px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* CATEGORIES */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .category {
+            min-height: 174px;
+
+            position: relative;
+            overflow: hidden;
+
+            padding: 23px;
+
+            border: 1px solid var(--line);
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(29, 23, 43, .94),
+                    rgba(15, 13, 23, .96)
+                );
+
+            transition:
+                border-color .2s,
+                transform .2s;
+        }
+
+        .category:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(184, 137, 255, .55);
+        }
+
+        .category-icon {
+            width: 43px;
+            height: 43px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background:
+                rgba(166, 108, 255, .13);
+
+            color: #c9a5ff;
+        }
+
+        .category-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .category h3 {
+            margin: 19px 0 7px;
+            font-size: 16px;
+        }
+
+        .category p {
+            color: var(--muted);
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .category .arrow {
+            position: absolute;
+
+            right: 22px;
+            top: 26px;
+
+            color: #9d7bc7;
+            font-size: 20px;
+        }
+
+
+        /* TEBEX CATALOG */
+        .store-status {
+            margin: 18px 0;
+            padding: 13px 16px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(25, 20, 38, .72);
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .store-status.error {
+            border-color: rgba(255, 105, 125, .4);
+            color: #ff9eae;
+        }
+        .store-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin: 22px 0;
+        }
+        .store-category-btn {
+            padding: 10px 15px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: rgba(255, 255, 255, .035);
+            color: #c9c1d8;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+        .store-category-btn:hover,
+        .store-category-btn.active {
+            border-color: rgba(190, 145, 255, .65);
+            background: rgba(166, 108, 255, .16);
+            color: white;
+        }
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 17px;
+        }
+        .package-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(29, 23, 43, .96), rgba(15, 13, 23, .98));
+            transition: transform .2s ease, border-color .2s ease;
+        }
+        .package-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(184, 137, 255, .55);
+        }
+        .package-image {
+            display: block;
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            padding: 18px;
+            background: rgba(0, 0, 0, .18);
+        }
+        .package-image.placeholder {
+            display: grid;
+            place-items: center;
+            color: #bd91ff;
+            font-size: 54px;
+            background: radial-gradient(circle, rgba(166,108,255,.18), rgba(0,0,0,.16));
+        }
+        .package-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 220px;
+            padding: 19px;
+        }
+        .package-category {
+            margin-bottom: 9px;
+            color: #bd91ff;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+        .package-content h3 {
+            margin-bottom: 9px;
+            font-size: 17px;
+        }
+        .package-description {
+            flex: 1;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+        .package-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .package-price {
+            color: #e7d8ff;
+            font-size: 16px;
+            font-weight: 900;
+        }
+        .package-external {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 12px;
+            border: 1px solid rgba(210, 180, 255, .28);
+            border-radius: 9px;
+            background: linear-gradient(135deg, #9b5df0, #7135c5);
+            color: white;
+            font-size: 10px;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+        .package-external:hover {
+            filter: brightness(1.12);
+        }
+        .catalog-empty {
+            grid-column: 1 / -1;
+            padding: 35px 20px;
+            border: 1px dashed var(--line);
+            border-radius: 14px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 13px;
+        }
+        @media (max-width: 900px) {
+            .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 560px) {
+            .package-grid { grid-template-columns: 1fr; }
+            .package-image { height: 175px; }
+            .package-content { min-height: 0; }
+            .package-bottom { align-items: flex-start; flex-direction: column; }
+        }
+
+        /* INFORMATION */
+
+        .notice {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+
+            padding: 25px 28px;
+
+            border: 1px solid rgba(166, 108, 255, .24);
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    110deg,
+                    rgba(93, 48, 143, .22),
+                    rgba(25, 18, 37, .8)
+                );
+        }
+
+        .notice h3 {
+            margin-bottom: 7px;
+            font-size: 17px;
+        }
+
+        .notice p {
+            color: var(--muted);
+
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .notice-icon {
+            flex: 0 0 48px;
+
+            width: 48px;
+            height: 48px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 14px;
+
+            background:
+                rgba(166, 108, 255, .14);
+
+            color: #c9a5ff;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 35px;
+
+            border-top: 1px solid var(--line);
+
+            padding: 28px 0;
+
+            color: #827991;
+            font-size: 11px;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 18px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 19px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 760px) {
+            .nav {
+                display: none;
+
+                position: absolute;
+
+                z-index: 5;
+
+                top: 75px;
+                left: 0;
+                right: 0;
+
+                padding: 20px;
+
+                flex-direction: column;
+                align-items: stretch;
+
+                gap: 18px;
+
+                background: #100d19;
+
+                border-bottom: 1px solid var(--line);
+            }
+
+            .nav.open {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .topbar-inner {
+                position: relative;
+            }
+
+            .hero {
+                padding: 65px 0 48px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .showcase {
+                min-height: 300px;
+            }
+
+            .section {
+                padding: 45px 0;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-head {
+                display: block;
+            }
+
+            .section-desc {
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: min(var(--max), calc(100% - 28px));
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category {
+                min-height: 150px;
+            }
+
+            .notice {
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .float-tag {
+                right: 0;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+        <div class="container topbar-inner">
+
+            <a class="brand" href="#" aria-label="DeluxeMine inicio">
+
+                <span class="brand-mark">
+
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4L12 2.8Z"
+                            stroke="white"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="m8 9 4-2.3L16 9v5.8l-4 2.3-4-2.3V9Z"
+                            fill="white"
+                            fill-opacity=".25"
+                            stroke="white"
+                            stroke-width="1.2"
+                        />
+                    </svg>
+
+                </span>
+
+                <span>
+                    DELUXEMINE
+                    <small>NETWORK STORE</small>
+                </span>
+
+            </a>
+
+            <nav class="nav" id="main-nav">
+
+                <a href="#inicio">Inicio</a>
+
+                <a href="#categorias">Categorías</a>
+
+                <a href="#informacion">Información</a>
+
+                <a
+                    class="nav-cta"
+                    href="https://deluxemine-new.tebex.io/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    TIENDA ACTUAL ↗
+                </a>
+
+            </nav>
+
+            <button
+                class="menu-toggle"
+                id="menu-toggle"
+                aria-label="Abrir menú"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero" id="inicio">
+
+            <div class="container hero-grid">
+
+                <div>
+
+                    <div class="eyebrow">
+                        TIENDA OFICIAL · DELUXEMINE NETWORK
+                    </div>
+
+                    <h1>
+                        ELEVA TU
+                        <br>
+                        <span>EXPERIENCIA.</span>
+                    </h1>
+
+                    <p class="hero-copy">
+                        Desbloquea nuevas ventajas, personaliza tu
+                        aventura y disfruta de todo lo que DeluxeMine
+                        tiene preparado para ti.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a class="button" href="#categorias">
+                            EXPLORAR CATEGORÍAS →
+                        </a>
+
+                        <a
+                            class="button secondary"
+                            href="https://deluxemine-new.tebex.io/"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            IR A LA TIENDA ACTUAL ↗
+                        </a>
+
+                    </div>
+
+                    <p class="hero-note">
+                        Pagos procesados de forma segura mediante Tebex.
+                    </p>
+
+                </div>
+
+                <div class="showcase">
+
+                    <div class="orb"></div>
+
+                    <div class="crystal-card">
+
+                        <div class="crystal-top">
+                            <span>DELUXEMINE</span>
+                            <span>✦ PREMIUM</span>
+                        </div>
+
+                        <div class="crystal">
+
+                            <svg viewBox="0 0 64 64" fill="none">
+
+                                <path
+                                    d="M32 5 52 24 32 59 12 24 32 5Z"
+                                    fill="#F4E9FF"
+                                    fill-opacity=".9"
+                                />
+
+                                <path
+                                    d="m32 5 7 19H12L32 5Z"
+                                    fill="#fff"
+                                />
+
+                                <path
+                                    d="m39 24 13 0-20 35 7-35Z"
+                                    fill="#B88AFF"
+                                />
+
+                                <path
+                                    d="M12 24h40L32 59 12 24Z"
+                                    stroke="#fff"
+                                    stroke-opacity=".55"
+                                    stroke-width="1.5"
+                                />
+
+                            </svg>
+
+                        </div>
+
+                        <h2>UNLOCK YOUR POTENTIAL</h2>
+
+                        <p>
+                            UNA NUEVA FORMA DE VIVIR DELUXEMINE
+                        </p>
+
+                    </div>
+
+                    <div class="float-tag">
+                        ✦ BENEFICIOS EXCLUSIVOS
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- TEBEX CATALOG -->
+
+        <section class="section" id="categorias">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <div class="section-kicker">CATÁLOGO OFICIAL</div>
+                        <h2 class="section-title">Explora la tienda</h2>
+                    </div>
+                    <p class="section-desc">
+                        Descubre los rangos, paquetes y beneficios disponibles
+                        en DeluxeMine Network. Los productos se cargan directamente
+                        desde el catálogo oficial de Tebex.
+                    </p>
+                </div>
+
+                <div id="store-status" class="store-status" role="status" aria-live="polite">
+                    Conectando con la tienda de DeluxeMine...
+                </div>
+
+                <div id="store-categories" class="store-categories"
+                     aria-label="Filtrar por categoría"></div>
+
+                <div id="store-products" class="package-grid"></div>
+            </div>
+        </section>
+
+        <!-- INFORMATION -->
+
+        <section class="section" id="informacion">
+
+            <div class="container">
+
+                <div class="notice">
+
+                    <div>
+
+                        <h3>
+                            Compra con tranquilidad
+                        </h3>
+
+                        <p>
+                            Las transacciones de la tienda se procesan
+                            mediante Tebex. Antes de finalizar una compra,
+                            revisa el paquete, sus condiciones y los
+                            beneficios incluidos.
+                        </p>
+
+                    </div>
+
+                    <div class="notice-icon">
+
+                        <svg
+                            width="23"
+                            height="23"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        >
+                            <path
+                                d="M12 3 4.5 6v5.5c0 4.4 3.1 7.7 7.5 9.5 4.4-1.8 7.5-5.1 7.5-9.5V6L12 3Z"
+                            />
+
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="container footer-inner">
+
+            <div>
+                © <span id="year"></span>
+                DELUXEMINE NETWORK.
+                Todos los derechos reservados.
+            </div>
+
+            <div class="footer-links">
+
+                <a
+                    href="https://deluxemine-new.tebex.io/"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Tebex
+                </a>
+
+                <a href="#informacion">
+                    Información
+                </a>
+
+                <a href="#inicio">
+                    Volver arriba ↑
+                </a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        const toggle = document.getElementById("menu-toggle");
+
+        const nav = document.getElementById("main-nav");
+
+        toggle.addEventListener("click", () => {
+
+            const isOpen = nav.classList.toggle("open");
+
+            toggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            toggle.setAttribute(
+                "aria-label",
+                isOpen ? "Cerrar menú" : "Abrir menú"
+            );
+
+        });
+
+        nav.querySelectorAll("a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                nav.classList.remove("open");
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            });
+
+        });
+
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+    </script>
+
+    <script type="module" src="js/store.js"></script>
+
+</body>
+</html>
