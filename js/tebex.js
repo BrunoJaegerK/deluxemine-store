@@ -1,4 +1,3 @@
-
 const TEBEX_PUBLIC_TOKEN = "10tom-6fcf115b1b20d46f3df6b24ff5b0c03e232591ff";
 
 const TEBEX_API = `https://headless.tebex.io/api/accounts/${TEBEX_PUBLIC_TOKEN}`;
