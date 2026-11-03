@@ -198,4 +198,6 @@ async function loadStore() {
             true
         );
     }
+    // Inicia la carga del catálogo al abrir la página.
+loadStore();
 }
