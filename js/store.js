@@ -1,7 +1,8 @@
 import {
     getCategories,
     getPackages,
-    createCheckout
+    createCheckout,
+    completeCheckout
 } from "./tebex.js";
 
 const status = document.getElementById("store-status");
@@ -14,6 +15,7 @@ let selectedCategory = "all";
 let isCheckingOut = false;
 
 const CART_STORAGE_KEY = "deluxemine_cart_v1";
+const PENDING_BASKET_KEY = "deluxemine_pending_basket";
 
 let cart = loadCart();
 
@@ -22,6 +24,8 @@ let cart = loadCart();
 ========================================= */
 
 function showStatus(message, error = false) {
+    if (!status) return;
+
     status.textContent = message;
     status.classList.toggle("error", error);
 }
@@ -372,6 +376,7 @@ function createCartInterface() {
     button.id = "dm-cart-button";
     button.className = "dm-cart-button";
     button.type = "button";
+
     button.innerHTML = `
         <span>🛒 Mi carrito</span>
         <span class="dm-cart-count" id="dm-cart-count">0</span>
@@ -391,6 +396,7 @@ function createCartInterface() {
 
             <header class="dm-cart-header">
                 <h2 id="dm-cart-title">Tu carrito</h2>
+
                 <button class="dm-cart-close"
                         id="dm-cart-close"
                         type="button"
@@ -444,7 +450,7 @@ function createCartInterface() {
 
 function openCart() {
     document.getElementById("dm-cart-overlay")
-        .classList.add("open");
+        ?.classList.add("open");
 
     renderCart();
 }
@@ -532,9 +538,13 @@ function renderCart() {
 
     if (cart.length === 0) {
         const empty = document.createElement("div");
+
         empty.className = "dm-cart-empty";
-        empty.textContent = "Tu carrito está vacío. Explora nuestros productos.";
+        empty.textContent =
+            "Tu carrito está vacío. Explora nuestros productos.";
+
         itemsContainer.append(empty);
+
     } else {
         cart.forEach(item => {
             const row = document.createElement("div");
@@ -560,6 +570,7 @@ function renderCart() {
             minus.type = "button";
             minus.textContent = "−";
             minus.setAttribute("aria-label", "Reducir cantidad");
+
             minus.addEventListener("click", () => {
                 changeQuantity(item.id, -1);
             });
@@ -573,6 +584,7 @@ function renderCart() {
             plus.type = "button";
             plus.textContent = "+";
             plus.setAttribute("aria-label", "Aumentar cantidad");
+
             plus.addEventListener("click", () => {
                 changeQuantity(item.id, 1);
             });
@@ -581,6 +593,7 @@ function renderCart() {
             remove.className = "dm-cart-remove";
             remove.type = "button";
             remove.textContent = "Eliminar";
+
             remove.addEventListener("click", () => {
                 removeFromCart(item.id);
             });
@@ -592,10 +605,15 @@ function renderCart() {
     }
 
     const currency = cart[0]?.currency || "USD";
-    totalElement.textContent = formatPrice(getCartTotal(), currency);
+
+    totalElement.textContent = formatPrice(
+        getCartTotal(),
+        currency
+    );
 
     if (checkoutButton) {
         checkoutButton.disabled = cart.length === 0 || isCheckingOut;
+
         checkoutButton.textContent = isCheckingOut
             ? "CONECTANDO CON TEBEX..."
             : "FINALIZAR COMPRA →";
@@ -617,26 +635,120 @@ async function checkout() {
     renderCart();
 
     try {
-        const checkoutUrl = await createCheckout(
+        // Creamos una cesta y solicitamos la autenticación.
+        const result = await createCheckout();
+
+        if (!result?.basketIdent || !result?.authUrl) {
+            throw new Error(
+                "Tebex no devolvió los datos necesarios para autenticar la cesta."
+            );
+        }
+
+        // Guardamos la cesta para continuar después del regreso.
+        sessionStorage.setItem(
+            PENDING_BASKET_KEY,
+            result.basketIdent
+        );
+
+        // Redirigimos al jugador a la autenticación de Tebex.
+        window.location.assign(result.authUrl);
+
+    } catch (error) {
+        console.error(
+            "Error iniciando autenticación de Tebex:",
+            error
+        );
+
+        message.textContent =
+            error.message ||
+            "No se pudo iniciar la autenticación con Tebex.";
+
+        isCheckingOut = false;
+        renderCart();
+    }
+}
+
+/* =========================================
+   CONTINUAR DESPUÉS DE AUTENTICAR
+========================================= */
+
+async function resumeAuthenticatedCheckout() {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("checkout") !== "authenticated") {
+        return;
+    }
+
+    const basketIdent =
+        params.get("basket") ||
+        sessionStorage.getItem(PENDING_BASKET_KEY);
+
+    if (!basketIdent) {
+        showStatus(
+            "No se encontró la cesta pendiente de Tebex.",
+            true
+        );
+
+        openCart();
+        return;
+    }
+
+    if (cart.length === 0) {
+        showStatus(
+            "No hay productos en el carrito para continuar.",
+            true
+        );
+
+        openCart();
+        return;
+    }
+
+    isCheckingOut = true;
+    renderCart();
+
+    const message = document.getElementById("dm-cart-message");
+
+    message.textContent = "";
+
+    showStatus(
+        "Jugador autenticado. Preparando tu compra..."
+    );
+
+    try {
+        // Añadimos los productos a la cesta autenticada.
+        const checkoutUrl = await completeCheckout(
+            basketIdent,
             cart.map(item => ({
                 id: item.id,
                 quantity: item.quantity
             }))
         );
 
-        // El carrito se conserva hasta que Tebex confirme
-        // el resultado del proceso de compra.
+        // Eliminamos la cesta pendiente después de obtener
+        // correctamente el enlace de checkout.
+        sessionStorage.removeItem(PENDING_BASKET_KEY);
+
+        // Redirigimos al checkout seguro de Tebex.
         window.location.assign(checkoutUrl);
 
     } catch (error) {
-        console.error("Error iniciando checkout de Tebex:", error);
+        console.error(
+            "Error completando checkout de Tebex:",
+            error
+        );
 
         message.textContent =
             error.message ||
-            "No se pudo iniciar el pago. Inténtalo nuevamente.";
+            "No se pudo completar la cesta de Tebex.";
 
         isCheckingOut = false;
         renderCart();
+        openCart();
+
+        showStatus(
+            "No se pudo preparar el pago. Revisa el mensaje del carrito.",
+            true
+        );
     }
 }
 
@@ -669,6 +781,7 @@ function renderCategories() {
 
         button.addEventListener("click", () => {
             selectedCategory = category.id;
+
             renderCategories();
             renderPackages();
         });
@@ -725,6 +838,7 @@ function renderPackages() {
             image.onerror = () => image.remove();
 
             card.append(image);
+
         } else {
             const placeholder = document.createElement("div");
 
@@ -746,20 +860,24 @@ function renderPackages() {
 
         const description = document.createElement("p");
         description.className = "package-description";
-        description.textContent = cleanDescription(pkg.description)
-            || "Producto disponible en la tienda oficial.";
+
+        description.textContent =
+            cleanDescription(pkg.description) ||
+            "Producto disponible en la tienda oficial.";
 
         const bottom = document.createElement("div");
         bottom.className = "package-bottom";
 
         const price = document.createElement("div");
         price.className = "package-price";
+
         price.textContent = formatPrice(
             pkg.total_price ?? pkg.base_price,
             pkg.currency || "USD"
         );
 
         const addButton = document.createElement("button");
+
         addButton.className = "package-add-cart";
         addButton.type = "button";
         addButton.textContent = "Añadir al carrito";
@@ -770,7 +888,13 @@ function renderPackages() {
 
         bottom.append(price, addButton);
 
-        content.append(category, title, description, bottom);
+        content.append(
+            category,
+            title,
+            description,
+            bottom
+        );
+
         card.append(content);
 
         productContainer.append(card);
@@ -829,7 +953,10 @@ async function loadStore() {
         );
 
     } catch (error) {
-        console.error("Error cargando el catálogo de Tebex:", error);
+        console.error(
+            "Error cargando el catálogo de Tebex:",
+            error
+        );
 
         showStatus(
             "No se pudo conectar con la tienda. Recarga la página o inténtalo más tarde.",
@@ -845,16 +972,34 @@ async function loadStore() {
 injectCartStyles();
 createCartInterface();
 
-const checkoutStatus = new URLSearchParams(window.location.search)
-    .get("checkout");
+const checkoutStatus = new URLSearchParams(
+    window.location.search
+).get("checkout");
 
 if (checkoutStatus === "complete") {
     showStatus(
         "Has regresado del checkout de Tebex. Comprueba el estado de tu compra."
     );
+
 } else if (checkoutStatus === "cancelled") {
-    showStatus("El proceso de compra fue cancelado. Tu carrito sigue disponible.");
+    showStatus(
+        "El proceso de compra fue cancelado. Tu carrito sigue disponible."
+    );
+
+} else if (checkoutStatus === "authenticated") {
+    showStatus(
+        "Autenticación completada. Continuando con tu compra..."
+    );
+
+} else {
+    showStatus(
+        "Conectando con la tienda de DeluxeMine..."
+    );
 }
 
 loadStore();
+
+if (checkoutStatus === "authenticated") {
+    resumeAuthenticatedCheckout();
+}
 
