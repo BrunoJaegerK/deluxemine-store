@@ -386,8 +386,3 @@ export async function completeCheckout(
 
     return parsedUrl.href;
 }
-
-}
-
-
-
